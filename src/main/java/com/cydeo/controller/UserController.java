@@ -35,16 +35,18 @@ public class UserController {
     }
 
     @PostMapping("/create")
-    public String insertUser(@ModelAttribute("user") UserDTO user, Model model){
-
-        model.addAttribute("user", new UserDTO()); // save e basınca boş yeni UserDTO object view e gelcek
-        model.addAttribute("roles", roleService.findAll());
+    public String insertUser(@ModelAttribute("user") UserDTO user){
 
         userService.save(user);
 
-        model.addAttribute("users", userService.findAll());
-
-        return "/user/create";
+        return "redirect:/user/create";
 
     }
 }
+/* return e redirect dersek aşağıdaki kodları tekrar yazmaya gerek yok!
+return "redirect:/user/create";
+        model.addAttribute("user", new UserDTO()); // save e basınca boş yeni UserDTO object view e gelcek
+        model.addAttribute("roles", roleService.findAll());
+        model.addAttribute("users", userService.findAll());
+
+ */
