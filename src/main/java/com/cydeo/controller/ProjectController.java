@@ -1,6 +1,7 @@
 package com.cydeo.controller;
 
 import com.cydeo.dto.ProjectDTO;
+import com.cydeo.dto.UserDTO;
 import com.cydeo.enums.Status;
 import com.cydeo.service.ProjectService;
 import com.cydeo.service.UserService;
@@ -25,7 +26,7 @@ public class ProjectController {
 
         model.addAttribute("project", new ProjectDTO()); // yeni project objesi
 
-        model.addAttribute("managers", userService.findAll());
+        model.addAttribute("managers", userService.findManagers());
 
         model.addAttribute("projects", projectService.findAll());
 
@@ -47,5 +48,35 @@ public class ProjectController {
         return "redirect:/project/create";
     }
 
+    @GetMapping("/complete/{projectCode}")
+    public String completeProject(@PathVariable("projectCode") String projectCode){
 
+        // complete -> status to complete -> do I have any service?
+        projectService.complete(projectService.findById(projectCode));
+
+        return "redirect:/project/create";
+    }
+
+    @GetMapping("/update/{projectCode}")
+    public String editProject(@PathVariable("projectCode") String projectCode, Model model){
+
+        // user object ${user}
+        model.addAttribute("project", projectService.findById(projectCode)); // boş obje olmicak!
+
+        // roles ${roles}
+        model.addAttribute("managers", userService.findManagers());
+
+        // users ${users}
+        model.addAttribute("projects", projectService.findAll());
+
+        return "/project/update";
+    }
+
+    @PostMapping("/update")
+    public String updateProject(@ModelAttribute("project") ProjectDTO project){ // @ModelAttribute("user") --> yazılmasa da olur
+
+        projectService.update(project);
+
+        return "redirect:/project/create";
+    }
 }
